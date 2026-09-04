@@ -9,10 +9,13 @@ const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 
   peerDependencies?: Record<string, string>;
 };
 
-const external = [
+const externalPackages = [
   ...Object.keys(pkg.dependencies ?? {}),
   ...Object.keys(pkg.peerDependencies ?? {}),
 ];
+
+const external = (id: string) =>
+  externalPackages.some((name) => id === name || id.startsWith(`${name}/`));
 
 export default defineConfig({
   plugins: [dts({ include: ['src'], exclude: ['src/**/*.test.ts'] })],
