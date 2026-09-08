@@ -10,6 +10,6 @@
     "build": "echo \"build: not set up yet (see issue #1)\""
   },
   "engines": {
-    "node": ">=22"
+    "node": "24"
   }
 }

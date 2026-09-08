@@ -7,4 +7,5 @@ is the topmost released one here.
 
 ## Unreleased
 
+- Node 24 is the required version (`engines.node` in `package.json`); CI, deploy and the agent workflow read it from there.
 - Agent rules live in `AGENTS.md`; `CLAUDE.md` only imports it. The Codex review rules are a section of the same file.
