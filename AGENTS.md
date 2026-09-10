@@ -8,7 +8,7 @@ Template repository for loewen-digital libraries. Everything here must be generi
 
 - TypeScript strict, Vite library mode, ESM only. Never CommonJS, never a `require` export, never tsup.
 - npm only. `package-lock.json` is committed. Never yarn or pnpm.
-- Vitest for tests. Node 22 (`.nvmrc`).
+- Vitest for tests. Node 24 (`engines.node` in `package.json`; CI and the workflows read it from there).
 - `exports` map with `types` and `import` per entry; `sideEffects: false`; `files` limited to `dist`.
 - Zod for runtime schemas where a library needs them. No React, no framework code in the core; framework adapters live in `src/adapters/<framework>.ts` with their own subpath export.
 

@@ -1,0 +1,5 @@
+dist
+coverage
+package-lock.json
+# The loop workflow is rolled out verbatim from agent-loop/snippets; leave its formatting alone.
+.github/workflows/agent.yml
