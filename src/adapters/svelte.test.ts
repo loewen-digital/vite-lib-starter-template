@@ -1,5 +1,5 @@
 import { get } from 'svelte/store';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 import { helloStore } from './svelte';
 
 describe('helloStore', () => {

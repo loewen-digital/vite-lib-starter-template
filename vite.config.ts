@@ -1,34 +1,57 @@
-import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
-import pkgJson from './package.json' with { type: 'json' };
-
-const pkg = pkgJson as {
-	dependencies?: Record<string, string>;
-	peerDependencies?: Record<string, string>;
-};
-
-// Everything a consumer installs themselves stays out of the bundle:
-// node built-ins plus every entry of dependencies and peerDependencies (with subpaths).
-const external = [
-	/^node:/,
-	...Object.keys({ ...pkg.dependencies, ...pkg.peerDependencies }).map(
-		(name) => new RegExp(`^${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(/|$)`)
-	)
-];
+import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
-	plugins: [dts({ include: ['src'], exclude: ['src/**/*.test.ts'] })],
-	build: {
-		target: 'es2022',
-		sourcemap: true,
-		lib: {
-			// One entry per subpath export; the key is the path under dist/.
-			entry: {
-				index: 'src/index.ts',
-				'adapters/svelte': 'src/adapters/svelte.ts'
-			},
-			formats: ['es']
+	// Library build (tsdown). dependencies and peerDependencies stay external by default.
+	pack: {
+		// One entry per subpath export; the key is the path under dist/.
+		entry: {
+			index: 'src/index.ts',
+			'adapters/svelte': 'src/adapters/svelte.ts'
 		},
-		rollupOptions: { external }
+		format: ['esm'],
+		platform: 'neutral',
+		target: 'es2022',
+		dts: true,
+		sourcemap: true
+	},
+	lint: {
+		ignorePatterns: ['dist/'],
+		categories: { correctness: 'error' },
+		// ESLint and typescript-eslint "recommended" rules that sit outside Oxlint's correctness category.
+		rules: {
+			'no-array-constructor': 'error',
+			'no-case-declarations': 'error',
+			'no-empty': 'error',
+			'no-fallthrough': 'error',
+			'no-prototype-builtins': 'error',
+			'no-regex-spaces': 'error',
+			'no-unexpected-multiline': 'error',
+			'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+			'no-var': 'error',
+			'prefer-const': 'error',
+			'prefer-rest-params': 'error',
+			'prefer-spread': 'error',
+			'preserve-caught-error': 'error',
+			'typescript/ban-ts-comment': 'error',
+			'typescript/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+			'typescript/no-empty-object-type': 'error',
+			'typescript/no-explicit-any': 'error',
+			'typescript/no-namespace': 'error',
+			'typescript/no-require-imports': 'error',
+			'typescript/no-unnecessary-type-constraint': 'error',
+			'typescript/no-unsafe-function-type': 'error',
+			'vite-plus/prefer-vite-plus-imports': 'error'
+		},
+		options: { typeAware: true, typeCheck: true },
+		jsPlugins: [{ name: 'vite-plus', specifier: 'vite-plus/oxlint-plugin' }]
+	},
+	fmt: {
+		useTabs: true,
+		singleQuote: true,
+		trailingComma: 'none',
+		printWidth: 100,
+		sortPackageJson: false,
+		// The loop workflow is rolled out verbatim from agent-loop/snippets; leave its formatting alone.
+		ignorePatterns: ['dist', 'coverage', 'package-lock.json', '.github/workflows/agent.yml']
 	}
 });

@@ -1,6 +1,6 @@
 # vite-lib-starter-template
 
-Template for every new loewen-digital library. Vite library mode, TypeScript strict, Vitest, ESM only, npm.
+Template for every new loewen-digital library. Vite+ (`vp pack`, `vp check`, `vp test`), TypeScript strict, ESM only, npm.
 
 Create a library from it:
 
@@ -12,8 +12,8 @@ gh repo create loewen-digital/<name> --template loewen-digital/vite-lib-starter-
 
 - `src/index.ts`: the library entry, with a placeholder `hello` and its test.
 - `src/adapters/svelte.ts`: an example framework adapter, exported as `./svelte`. Same pattern for any framework: one file under `src/adapters/`, one entry in `vite.config.ts`, one subpath in `exports`, the framework as an optional peer dependency.
-- `vite.config.ts`: library mode, ESM only, type declarations through `vite-plugin-dts`, everything in `dependencies` and `peerDependencies` stays external.
-- TypeScript strict (`tsconfig.json`), Vitest, ESLint flat config plus Prettier (tabs, single quotes, width 100). TypeScript stays on 6.x until typescript-eslint supports 7.
+- `vite.config.ts`: the whole toolchain in one file. `pack` builds ESM plus type declarations (tsdown), everything in `dependencies` and `peerDependencies` stays external; `lint` is Oxlint with type-aware checks and full type checking; `fmt` is Oxfmt (tabs, single quotes, width 100).
+- TypeScript strict (`tsconfig.json`), tests with Vitest through `vite-plus/test`.
 - `.github/workflows/ci.yml` on every push to `main` and every pull request, `release.yml` on every `v*` tag.
 - `AGENTS.md`: the rules for coding agents; `CLAUDE.md` only imports it.
 
@@ -26,13 +26,12 @@ gh repo create loewen-digital/<name> --template loewen-digital/vite-lib-starter-
 
 ## Scripts
 
-| Script           | Does                                                                                   |
-| ---------------- | -------------------------------------------------------------------------------------- |
-| `npm run check`  | `tsc --noEmit`                                                                         |
-| `npm run lint`   | ESLint, then Prettier in check mode                                                    |
-| `npm run format` | Prettier, writes                                                                       |
-| `npm test`       | Vitest, single run (`npm run test:watch` for watch mode)                               |
-| `npm run build`  | Vite library build into `dist/`; `prepack` runs it before `npm pack` and `npm publish` |
+| Script           | Does                                                                          |
+| ---------------- | ----------------------------------------------------------------------------- |
+| `npm run check`  | `vp check`: format check, lint and type check in one pass                     |
+| `npm run format` | `vp check --fix`: formats and applies lint autofixes                          |
+| `npm test`       | `vp test run`, single run (`npm run test:watch` for watch mode)               |
+| `npm run build`  | `vp pack` into `dist/`; `prepack` runs it before `npm pack` and `npm publish` |
 
 ## Install
 

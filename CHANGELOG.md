@@ -7,6 +7,8 @@ is the topmost released one here.
 
 ## Unreleased
 
+- Toolchain is Vite+ 1.0 (`vite-plus`), configured in `vite.config.ts` ([decision 0002](docs/decisions/0002-vite-plus.md)): `vp pack` (tsdown) builds the library instead of Vite library mode plus `vite-plugin-dts`; `vp check` replaces `tsc --noEmit`, ESLint and Prettier (Oxlint with type-aware checks, Oxfmt with the same settings); tests import from `vite-plus/test`. The `lint` script is gone, `check` covers it; `format` runs `vp check --fix`. `ci.yml` drops the `lint` step. Output and exports map are unchanged.
+
 - The starter is built (#1): `src/index.ts` with the placeholder `hello` and its test, `src/adapters/svelte.ts` as the pattern for framework adapters (subpath export `./svelte`, `svelte` as optional peer dependency), Vite library build (ESM only, `dist/index.js` plus declarations from `vite-plugin-dts`, everything in `dependencies` and `peerDependencies` stays external), TypeScript strict, Vitest, ESLint flat config and Prettier with the settings of sveltekit-ai-starter-template. Scripts: `check`, `lint`, `format`, `test`, `build`. TypeScript stays on 6.x until typescript-eslint supports 7.
 - `ci.yml` runs `npm run check` and `npm run lint` before test and build.
 - README: what to change after creating a repository from the template, scripts, exports map, release procedure by tag.

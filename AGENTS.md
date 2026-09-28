@@ -6,9 +6,9 @@ Template repository for loewen-digital libraries. Everything here must be generi
 
 ## Stack (fixed)
 
-- TypeScript strict, Vite library mode, ESM only. Never CommonJS, never a `require` export, never tsup.
+- TypeScript strict, ESM only. Toolchain is Vite+ (`vite-plus`), configured in `vite.config.ts`: `vp pack` builds the library, `vp check` formats, lints and type-checks, `vp test` runs Vitest. Never CommonJS, never a `require` export, never a second bundler, linter or formatter (tsup, ESLint, Prettier).
 - npm only. `package-lock.json` is committed. Never yarn or pnpm.
-- Vitest for tests. Node 24 (`engines.node` in `package.json`; CI and the workflows read it from there).
+- Tests import from `vite-plus/test`, not `vitest`. Node 24 (`engines.node` in `package.json`; CI and the workflows read it from there).
 - `exports` map with `types` and `import` per entry; `sideEffects: false`; `files` limited to `dist`.
 - Zod for runtime schemas where a library needs them. No React, no framework code in the core; framework adapters live in `src/adapters/<framework>.ts` with their own subpath export.
 
