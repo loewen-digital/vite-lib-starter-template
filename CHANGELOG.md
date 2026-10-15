@@ -7,6 +7,7 @@ is the topmost released one here.
 
 ## Unreleased
 
+- CI is the library shape of the org snippet ([decision 0003](docs/decisions/0003-ci-org-snippet.md)): one job `verify` (check, unit tests, build) on every push to `main`, every pull request and on manual run, with `concurrency` (a newer push cancels the running build) and `timeout-minutes`. A push to `main` that touches only `docs/**` or Markdown runs nothing. `release.yml` is unchanged.
 - For contributors: files are formatted on save when Claude Code or Codex edits them (`vp fmt` through the hooks in `.claude/settings.json` and `.codex/hooks.json`); `npm run format` stays for everything else.
 - Toolchain is Vite+ 1.0 (`vite-plus`), configured in `vite.config.ts` ([decision 0002](docs/decisions/0002-vite-plus.md)): `vp pack` (tsdown) builds the library instead of Vite library mode plus `vite-plugin-dts`; `vp check` replaces `tsc --noEmit`, ESLint and Prettier (Oxlint with type-aware checks, Oxfmt with the same settings); tests import from `vite-plus/test`. The `lint` script is gone, `check` covers it; `format` runs `vp check --fix`. `ci.yml` drops the `lint` step. Output and exports map are unchanged.
 

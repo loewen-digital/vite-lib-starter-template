@@ -1,20 +1,45 @@
 name: CI
 
+# The library shape of the org snippet (loewen-digital/agent-loop `snippets/ci.yml`): the job
+# `verify` only. No `e2e`, no `deploy`, no `tags` trigger: release.yml publishes a library and
+# carries the tag guard. Keep the rest identical to the snippet so the file stays diffable.
+#   pull request        → verify
+#   push to main        → verify; a push that touches nothing but docs runs nothing
+#   manual run          → verify, from any branch (Actions tab → Run workflow)
+
 on:
   push:
     branches: [main]
+    paths-ignore: ['docs/**', '**.md']
   pull_request:
+  workflow_dispatch:
+
+# A newer push to the same branch or pull request cancels the running one. The tag condition is
+# the snippet's, kept verbatim; without a `tags` trigger it is always true here.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
 jobs:
-  ci:
+  verify:
+    name: Check, unit, build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
+
       - uses: actions/setup-node@v5
         with:
           node-version-file: package.json
           cache: npm
+
       - run: npm ci
-      - run: npm run check
-      - run: npm test
-      - run: npm run build
+
+      - name: Format, lint, types
+        run: npm run check
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Production build
+        run: npm run build

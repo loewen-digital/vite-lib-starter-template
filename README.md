@@ -14,7 +14,7 @@ gh repo create loewen-digital/<name> --template loewen-digital/vite-lib-starter-
 - `src/adapters/svelte.ts`: an example framework adapter, exported as `./svelte`. Same pattern for any framework: one file under `src/adapters/`, one entry in `vite.config.ts`, one subpath in `exports`, the framework as an optional peer dependency.
 - `vite.config.ts`: the whole toolchain in one file. `pack` builds ESM plus type declarations (tsdown), everything in `dependencies` and `peerDependencies` stays external; `lint` is Oxlint with type-aware checks and full type checking; `fmt` is Oxfmt (tabs, single quotes, width 100).
 - TypeScript strict (`tsconfig.json`), tests with Vitest through `vite-plus/test`.
-- `.github/workflows/ci.yml` on every push to `main` and every pull request, `release.yml` on every `v*` tag.
+- `.github/workflows/ci.yml` on every push to `main` and every pull request (one job `verify`: check, unit tests, build; a push that touches only `docs/**` or Markdown runs nothing), `release.yml` on every `v*` tag.
 - `AGENTS.md`: the rules for coding agents; `CLAUDE.md` only imports it.
 
 ## After creating a repository
